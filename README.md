@@ -177,7 +177,7 @@ Arquivo de referencia em [apps/api/.env.example](apps/api/.env.example).
 | `ACCESS_TOKEN_TTL_MINUTES` | `60` | Validade do access token |
 | `REFRESH_TOKEN_TTL_DAYS` | `7` | Validade do refresh token |
 | `BCRYPT_ROUNDS` | `12` | Custo do hash de senha |
-| `CORS_ORIGINS` | `http://localhost:5173` | Origens autorizadas, separadas por virgula |
+| `CORS_ORIGINS` | `http://localhost:5173` | Origens autorizadas, separadas por virgula. Fora de producao, `localhost`, `127.0.0.1` e `::1` sao liberados em qualquer porta |
 | `LOGIN_RATE_LIMIT_MAX` | `5` | Tentativas de login por janela |
 | `LOGIN_RATE_LIMIT_WINDOW_MINUTES` | `15` | Duracao da janela de rate limit |
 

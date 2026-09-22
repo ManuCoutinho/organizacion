@@ -2,7 +2,7 @@ import express, { type Express } from 'express'
 import cors from 'cors'
 import helmet from 'helmet'
 import swaggerUi from 'swagger-ui-express'
-import { env } from './config/env.js'
+import { corsOriginHandler } from './config/cors.js'
 import { routes } from './routes/index.js'
 import { apiRateLimiter } from './middlewares/rate-limit.js'
 import { errorHandler, notFoundHandler } from './middlewares/error-handler.js'
@@ -15,17 +15,7 @@ export const createApp = (): Express => {
   app.set('trust proxy', 1)
 
   app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }))
-  app.use(
-    cors({
-      origin: (origin, callback) => {
-        if (!origin || env.corsOrigins.includes(origin)) {
-          return callback(null, true)
-        }
-        callback(new Error('Origem nao autorizada pelo CORS.'))
-      },
-      credentials: true
-    })
-  )
+  app.use(cors({ origin: corsOriginHandler, credentials: true }))
   app.use(express.json({ limit: '100kb' }))
   app.use(apiRateLimiter)
 

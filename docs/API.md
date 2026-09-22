@@ -51,6 +51,7 @@ Especificacao OpenAPI 3.0: `http://localhost:3333/api/openapi.json`
 | `404 Not Found` | Usuario ou rota inexistente |
 | `409 Conflict` | E-mail ja cadastrado ou remocao do ultimo administrador ativo |
 | `429 Too Many Requests` | Limite de tentativas de login excedido |
+| `403 CORS_NOT_ALLOWED` | Origem do navegador fora da allowlist de CORS |
 | `500 Internal Server Error` | Erro nao previsto (mensagem generica, sem stack trace) |
 
 ### 1.5 Principios REST aplicados
@@ -412,7 +413,7 @@ Assim, mesmo que um parceiro peca `users:delete`, um usuario com perfil Operador
 | 7 | **Enumeracao de usuarios** | Mapeamento de quais e-mails existem, insumo para phishing | Mensagem de erro identica para e-mail inexistente e senha errada; a rota executa um hash mesmo quando o usuario nao existe, equalizando o tempo de resposta |
 | 8 | **Payloads maliciosos / mass assignment** | Corrupcao de dados ou gravacao de campos nao previstos | Validacao com **Zod** em body, query e params; apenas os campos declarados no schema chegam a camada de servico |
 | 9 | **Cross-Site Scripting (XSS)** | Roubo de token pelo navegador | React escapa todo conteudo interpolado por padrao; `helmet` define `Content-Security-Policy`, `X-Content-Type-Options` e demais headers; nao ha uso de `dangerouslySetInnerHTML` |
-| 10 | **Cross-Origin Resource Sharing permissivo** | Qualquer site chamando a API com as credenciais do usuario | CORS com **allowlist explicita** via `CORS_ORIGINS`; origens nao listadas sao recusadas |
+| 10 | **Cross-Origin Resource Sharing permissivo** | Qualquer site chamando a API com as credenciais do usuario | CORS com **allowlist explicita** via `CORS_ORIGINS`; origens nao listadas recebem `403 CORS_NOT_ALLOWED`. Fora de producao, origens de loopback (`localhost`, `127.0.0.1`, `::1`) sao aceitas em qualquer porta para nao travar o desenvolvimento; em producao **somente** o que estiver em `CORS_ORIGINS` passa |
 | 11 | **Vazamento de informacao em erros** | Stack traces revelando estrutura interna e versoes | Handler central de erros retorna mensagem generica em `500`; header `x-powered-by` desabilitado |
 | 12 | **Negacao de servico por payload grande** | Exaustao de memoria do processo | `express.json({ limit: '100kb' })` |
 | 13 | **Privilegios obsoletos em token valido** | Usuario rebaixado mantendo poderes ate o token expirar | O middleware compara a claim `role` com o perfil atual no banco e recusa divergencias; alteracoes de perfil revogam os refresh tokens |

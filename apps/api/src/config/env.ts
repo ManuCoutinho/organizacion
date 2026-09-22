@@ -45,7 +45,7 @@ if (!parsed.success) {
 export const env = {
   ...parsed.data,
   corsOrigins: parsed.data.CORS_ORIGINS.split(',')
-    .map((origin) => origin.trim())
+    .map((origin) => origin.trim().replace(/\/+$/, ''))
     .filter(Boolean),
   accessTokenTtlSeconds: parsed.data.ACCESS_TOKEN_TTL_MINUTES * 60,
   refreshTokenTtlSeconds: parsed.data.REFRESH_TOKEN_TTL_DAYS * 24 * 60 * 60,
