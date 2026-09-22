@@ -1,0 +1,49 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    container_name: organizacion-api
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3333
+      DATABASE_FILE: /repo/apps/api/data/organizacion.db
+      JWT_SECRET: ${JWT_SECRET:-troque-este-valor-por-um-segredo-de-no-minimo-32-caracteres}
+      JWT_ISSUER: organizacion-api
+      JWT_AUDIENCE: organizacion-web
+      ACCESS_TOKEN_TTL_MINUTES: 60
+      REFRESH_TOKEN_TTL_DAYS: 7
+      BCRYPT_ROUNDS: 12
+      CORS_ORIGINS: http://localhost:8080
+      SEED_ADMIN_EMAIL: ${SEED_ADMIN_EMAIL:-admin@organizacion.dev}
+      SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:-Admin@12345}
+    volumes:
+      - api-data:/repo/apps/api/data
+    ports:
+      - '3333:3333'
+    networks:
+      - organizacion
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      args:
+        VITE_API_URL: /api
+    container_name: organizacion-web
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - '8080:80'
+    networks:
+      - organizacion
+
+volumes:
+  api-data:
+
+networks:
+  organizacion:
+    driver: bridge
