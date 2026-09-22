@@ -1,5 +1,4 @@
 # Logs
-# Logs
 logs
 *.log
 npm-debug.log*
@@ -7,14 +6,23 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
-package-lock.json
-yarn.lock
+
+# Dependencies
 node_modules
+
+# Build
 dist
 dist-ssr
+*.tsbuildinfo
 *.local
 
-# Editor directories and files
+# Testes
+coverage
+
+# Banco de dados local
+apps/api/data
+
+# Editor
 .vscode/*
 !.vscode/extensions.json
 .idea
@@ -25,7 +33,9 @@ dist-ssr
 *.sln
 *.sw?
 
-#Environment
+# Ambiente
 .env
 .env.local
 .env.production
+
+*.tsbuildinfo
